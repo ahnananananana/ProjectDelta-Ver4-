@@ -1,6 +1,10 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+
+/*****************************
+ * 구르는 물체가 상속받는 클래스
+ *****************************/
 
 public abstract class hRollObject : MonoBehaviour
 {
@@ -39,6 +43,11 @@ public abstract class hRollObject : MonoBehaviour
         _landEvent = null;
     }
 
+    /*****************************
+     *물체를 특정 위치로 옮기는 함수
+     *@param Vector3 inPosition : 옮길 위치
+     *@param Quaternion inRotation : 옮길 각도
+     *****************************/
     public void TransfromObject(Vector3 inPosition, Quaternion inRotation)
     {
         transform.SetParent(null);
@@ -47,12 +56,14 @@ public abstract class hRollObject : MonoBehaviour
         _rigidbody.position = inPosition;
     }
 
+    /*****************************
+     *블록의 표면을 따라서 움직이게 하는 함수
+     *****************************/
     protected void MoveForward()
     {
         if (_isFly) return;
 
         _prePosition = _rigidbody.position;
-        //transform.Translate(_center.forward * _moveSpeed * Time.fixedDeltaTime);
         _rigidbody.position += _center.forward * _moveSpeed * hTime.fixedDeltaTime;
         transform.position = _rigidbody.position;
 
@@ -67,7 +78,6 @@ public abstract class hRollObject : MonoBehaviour
 
         if (Physics.Raycast(forwardRay, _rayDis, _groundLayer))
         {
-            //transform.Rotate(new Vector3(-90f, 0, 0), Space.World);
             _center.transform.Rotate(-90f, 0f, 0f);
             forwardRay = new Ray(_centerRayPoint.position, -_centerRayPoint.up);
             Physics.Raycast(forwardRay, out var hit, _rayDis, _groundLayer);
@@ -94,7 +104,6 @@ public abstract class hRollObject : MonoBehaviour
         {
             _rigidbody.position = _prePosition;
             transform.position = _rigidbody.position;
-            //transform.Rotate(90f, 0f, 0f, Space.World);
             _center.transform.Rotate(90f, 0f, 0f);
 
             frontRay = new Ray(_frontRayPoint.position, -_frontRayPoint.up);
@@ -113,12 +122,14 @@ public abstract class hRollObject : MonoBehaviour
         Debug.DrawRay(_backRayPoint.position, -_backRayPoint.up, Color.red);
     }
 
+    /*****************************
+     *위쪽으로 날아가게 하는 함수
+     *****************************/
     protected void Fly()
     {
         if (!_isFly) return;
 
         _prePosition = _rigidbody.position;
-        //transform.Translate(_center.up * _moveSpeed * Time.fixedDeltaTime);
         _rigidbody.position += _center.up * _moveSpeed * hTime.fixedDeltaTime;
         transform.position = _rigidbody.position;
 
